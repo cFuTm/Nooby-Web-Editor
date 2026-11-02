@@ -1,0 +1,9 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {Store,element,page,project,validate} from '../src/model.ts';
+import {exportWebsite,style} from '../src/exporter.ts';
+test('空白工程、版本和数值验证',()=>{const p=project();assert.equal(validate(p).pages[0].width,1440);assert.throws(()=>validate({...p,version:2} as any));p.pages[0].elements.push({...element('text'),x:NaN});assert.throws(()=>validate(p))});
+test('数据层编辑、撤销、重做及新分支',()=>{const s=new Store();const id=s.value.pages[0].id;s.change(p=>p.pages[0].elements.push(element('text')));s.change(p=>p.pages[0].elements[0].text='中文内容');s.undo();assert.equal(s.value.pages[0].elements[0].text,'双击编辑文字');s.redo();assert.equal(s.value.pages[0].elements[0].text,'中文内容');s.undo();s.change(p=>p.pages[0].name='分支');assert.equal(s.future.length,0);assert.equal(s.value.pages[0].id,id)});
+test('多页面工程 JSON 往返无损',()=>{const p=project();p.pages.push(page());p.pages[1].elements.push(element('image'));assert.deepEqual(validate(JSON.parse(JSON.stringify(p))),p)});
+test('独立 HTML 导出、中文转义、相对资源和页面链接',()=>{const p=project();const b=page();p.pages.push(b);const a=element('text');a.text='中文 <script> & "';a.link=b.id;p.pages[0].elements.push(a);const img=element('image');img.src='assets/images/test.png';img.rotation=-8;b.elements.push(img);const files=exportWebsite(p);assert.match(files['index.html'],/中文 &lt;script&gt; &amp; &quot;/);assert.match(files['index.html'],new RegExp('pages/'+b.id));assert.match(files['pages/'+b.id+'.html'],/src="..\/assets\/images\/test.png"/);assert.match(files['css/'+b.id+'.css'],/rotate\(-8deg\)/);assert.ok(!Object.values(files).join('').includes('electron'));assert.match(files['index.html'],/charset="utf-8"/)});
+test('隐藏、图层和旋转保持设计坐标',()=>{const a=element('ellipse');a.visible=false;a.zIndex=8;a.rotation=72;const css=style(a);assert.equal(css.display,'none');assert.equal(css.zIndex,8);assert.equal(css.width,320);assert.equal(css.borderRadius,'50%')});

@@ -1,0 +1,1 @@
+const {app,BrowserWindow}=require('electron');app.whenReady().then(()=>{new BrowserWindow({width:1440,height:1000,webPreferences:{contextIsolation:true,nodeIntegration:false}}).loadFile(process.argv[2])});app.on('window-all-closed',()=>app.quit());
