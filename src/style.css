@@ -3,3 +3,4 @@
 
 
 .board{overflow:hidden;user-select:none}.drawing{cursor:crosshair}.drawingDraft{pointer-events:none}.iconOptions{display:flex;gap:8px}.iconOptions button{border:1px solid #e1e6da;min-width:40px;font-size:18px}.modalBackdrop{position:fixed;inset:0;background:#18251a66;display:grid;place-items:center;z-index:2147483647}.editorDialog{width:420px;padding:24px;background:#fafbf7;border-radius:10px;box-shadow:0 15px 60px #0003}.editorDialog textarea{min-height:180px}.editorDialog>div{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.numberControl{display:flex;flex-direction:column;gap:5px}.numberControl input[type=range]{padding:0;height:14px;accent-color:#557544}.canvasBar .numberControl{width:70px}.marquee{position:absolute;border:1px solid #6d934d;background:#81ae5333;z-index:2147483647;pointer-events:none}.groupRow{background:#edf1e7;font-weight:600}.text-content{pointer-events:none}
